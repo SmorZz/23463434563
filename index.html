@@ -18,13 +18,13 @@
 
     #slideshow {
       width: 320px;
-      border-radius: 20px;
+      border-radius: 50%; /* circular images */
       margin-top: 20px;
     }
 
     button {
-      font-size: 20px;
-      padding: 12px 24px;
+      font-size: 22px;
+      padding: 12px 26px;
       margin: 20px;
       cursor: pointer;
       border-radius: 10px;
@@ -33,7 +33,6 @@
     }
 
     #yes {
-      font-size: 24px;
       background-color: #ff4d6d;
       color: white;
     }
@@ -42,12 +41,26 @@
       background-color: #cccccc;
       position: absolute;
     }
+
+    /* confetti pieces */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: gold;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.8;
+      border-radius: 50%;
+    }
   </style>
 </head>
 
-<body>
+<body onclick="startMusic()">
 
-  <h1>Will you be my Valentine? 💖</h1>
+  <h1>Vanshika, Will you be my Valentine? 💖</h1>
 
   <img id="slideshow" src="pic1.jpeg">
 
@@ -56,10 +69,21 @@
     <button id="no" onmouseover="moveNo()">NO 🙃</button>
   </div>
 
-  <audio id="music" src="ishq wala love.mp3" loop></audio>
+  <audio id="music" loop>
+    <source src="ishq wala love.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
-    // Slideshow
+    // --- MUSIC ---
+    let musicStarted = false;
+    function startMusic() {
+      if (!musicStarted) {
+        document.getElementById("music").play();
+        musicStarted = true;
+      }
+    }
+
+    // --- SLIDESHOW ---
     let photos = [
       "pic1.jpeg",
       "pic 2.jpeg",
@@ -75,30 +99,56 @@
       document.getElementById("slideshow").src = photos[index];
     }, 2000);
 
-    // YES button grows
-    let yesSize = 24;
-
-    function yesClicked() {
-      document.getElementById("music").play();
-      document.body.innerHTML = `
-        <h1>YAYYYY 💕</h1>
-        <p>I’m so happy you said yes 🥰</p>
-      `;
-    }
-
-    // NO button runs away
+    // --- NO RUNS AWAY ---
     function moveNo() {
-      document.getElementById("music").play();
+      startMusic();
 
       const noBtn = document.getElementById("no");
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 100);
+      const x = Math.random() * (window.innerWidth - 120);
+      const y = Math.random() * (window.innerHeight - 120);
 
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
+    }
 
-      yesSize += 6;
-      document.getElementById("yes").style.fontSize = yesSize + "px";
+    // --- YES CLICK ---
+    function yesClicked() {
+      startMusic();
+
+      document.body.innerHTML = `
+        <h1>yayyy!!💕</h1>
+        <p>You just made me the happiest person alive! I love you so much! 🥰</p>
+      `;
+
+      // start confetti
+      createConfetti();
+      setInterval(createConfetti, 200);
+    }
+
+    // --- CONFETTI FUNCTION ---
+    function createConfetti() {
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+
+      // random starting position
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
+      confetti.style.width = confetti.style.height = Math.random() * 8 + 8 + "px";
+
+      document.body.appendChild(confetti);
+
+      // falling animation
+      let top = 0;
+      const fall = setInterval(() => {
+        top += 5 + Math.random() * 5;
+        confetti.style.top = top + "px";
+
+        // remove after it falls off screen
+        if(top > window.innerHeight) {
+          confetti.remove();
+          clearInterval(fall);
+        }
+      }, 20);
     }
   </script>
 
