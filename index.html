@@ -1,1 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Vanshika 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #ffe6ef;
+  font-family: "Georgia", serif;
+  overflow: hidden;
+}
+
+/* Common screen style */
+.screen {
+  display: none;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.screen.active { display:flex; opacity:1; }
+
+/* Fade-in class for initial animation */
+.fade-in {
+  animation: fade 1s ease forwards;
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Titles and hints */
+h1 {
+  color: #b30047;
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+.hint {
+  font-size: 16px;
+  color: #7a002a;
+  opacity: 0.7;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+/* Slideshow images */
+.slideshow img {
+  width: 280px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+  margin-bottom: 30px;
+}
+
+/* Buttons */
+.buttons {
+  position: relative;
+  height: 120px;
+}
+button {
+  padding: 14px 34px;
+  font-size: 20px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+button:hover { transform: scale(1.06); }
+
+/* YES button heartbeat */
+#yesBtn {
+  background: #ff4d79;
+  color: white;
+  animation: heartbeat 1s infinite;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.15); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.15); }
+}
+
+/* NO button */
+#noBtn {
+  background: #ffd1dc;
+  color: #7a002a;
+  position: absolute;
+  left: 160px;
+  top: 0;
+}
+
+/* Letter screen */
+.letter {
+  background: white;
+  padding: 45px;
+  max-width: 700px;
+  border-radius: 28px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+  font-size: 19px;
+  line-height: 1.7;
+  text-align: left;
+}
+.signature { margin-top: 30px; font-weight: bold; }
+
+/* Confetti */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+</style>
+</head>
+<body>
+
+<audio id="music" loop>
+  <source src="ishq wala love.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PAGE 1 -->
+<div id="page1" class="screen active">
+  <button id="startBtn">Click Here</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="questionScreen" class="screen">
+  <h1>Vanshika, will you be my Valentine? 💖</h1>
+  <p class="hint">hint: try clicking no...</p>
+  <div class="slideshow">
+    <img id="slide" src="pic1.jpeg">
+  </div>
+  <div class="buttons">
+    <button id="yesBtn">Yes 💘</button>
+    <button id="noBtn">No 🙃</button>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="screen">
+  <h1>You just made me the happiest guy alive 💕</h1>
+  <p>I love you so much 🥰</p>
+  <button id="nextBtn">CLICK HERE!!</button>
+</div>
+
+<!-- PAGE 4 -->
+<div id="letterScreen" class="screen">
+  <canvas id="confetti"></canvas>
+  <div class="letter">
+    <p>Dear Vanshika,</p>
+    <p>
+      Even though we can't spend Valentine's Day together right now, every moment we share
+      makes me realize just how incredible you are. Whether it's our long chats about everything
+      and anything or those fun moments playing games like Roblox, every second with you means the world to me.
+      I cherish our calls and feel incredibly lucky that fate brought us together.
+    </p>
+    <p>
+      I love you so much. Happy Valentine’s Day!
+    </p>
+    <p class="signature">
+      From,<br>Nilesh 💖
+    </p>
+  </div>
+</div>
+
+<script>
+// Start experience
+let started = false;
+const page1 = document.getElementById("page1");
+const questionScreen = document.getElementById("questionScreen");
+const page3 = document.getElementById("page3");
+const letterScreen = document.getElementById("letterScreen");
+const music = document.getElementById("music");
+
+document.getElementById("startBtn").onclick = () => {
+  page1.classList.remove("active");
+  questionScreen.classList.add("active");
+  music.play().catch(()=>{});
+};
+
+// Slideshow
+const photos = ["pic1.jpeg","pic 2.jpeg","pic 3.jpeg","pic 4.jpeg","pic 5.jpeg","pic 6.jpeg"];
+let i=0;
+const slideImg = document.getElementById("slide");
+setInterval(() => { 
+  i=(i+1)%photos.length; 
+  slideImg.src = photos[i]; 
+}, 2200);
+
+// Smart NO button
+const noBtn = document.getElementById("noBtn");
+document.addEventListener("mousemove", e => {
+  const r = noBtn.getBoundingClientRect();
+  const dx = e.clientX - (r.left + r.width/2);
+  const dy = e.clientY - (r.top + r.height/2);
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  if(dist < 120){
+    const maxX = window.innerWidth - noBtn.offsetWidth;
+    const maxY = window.innerHeight - noBtn.offsetHeight;
+    noBtn.style.left = Math.random()*maxX + "px";
+    noBtn.style.top = Math.random()*maxY + "px";
+  }
+});
+
+// YES button
+document.getElementById("yesBtn").onclick = () => {
+  questionScreen.classList.remove("active");
+  page3.classList.add("active");
+  startConfetti();
+};
+
+// PAGE 3 -> NEXT
+document.getElementById("nextBtn").onclick = () => {
+  page3.classList.remove("active");
+  letterScreen.classList.add("active");
+};
+
+// Confetti
+function startConfetti(){
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = Array.from({length: 180}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 6 + 4,
+    s: Math.random() * 3 + 2
+  }));
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "#ff4d79";
+    pieces.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+      p.y += p.s;
+      if(p.y > canvas.height) p.y = 0;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+</script>
+
+</body>
+</html>
 
